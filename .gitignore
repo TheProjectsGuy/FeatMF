@@ -1,2 +1,4 @@
 # Ignore settings
 .vscode/settings.json
+# Ignore docs (built)
+docs/build/
