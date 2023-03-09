@@ -17,6 +17,8 @@ The following commands were used to create the docs
     pip install sphinx-reload
     sphinx-quickstart docs
 
+The above commands were installed using ``conda``, but the ``requirements.txt`` is populated using ``pip`` like entries in parallel. This is to install only sphinx packages in the build pipeline for the docs.
+
 Build the docs using
 
 .. code-block:: bash
