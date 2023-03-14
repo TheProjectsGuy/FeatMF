@@ -1,0 +1,19 @@
+{% set name = "FeatMF" %}
+{% set version = "0.1.0" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+requirements:
+  host:
+    - pip
+
+build:
+  number: 0
+  script: "python -m pip install . --no-deps --ignore-installed -vv "
+
+about:
+  home: https://featmf.readthedocs.io/en/latest/
+  license: LGPLv3
+  summary: A Feature Matching Framework

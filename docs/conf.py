@@ -15,12 +15,36 @@ release = '0.1.0'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    'sphinx_copybutton'
+    'sphinx_copybutton',
+    'sphinx.ext.autodoc',
 ]
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
+# -- Autodoc configuration ---------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html
+
+# autoclass_content = 'both'
+
+# Add src to sys.path
+import os
+import sys
+from pathlib import Path
+# Set the "./../src" from the script folder
+dir_name = None
+try:
+    dir_name = os.path.dirname(os.path.realpath(__file__))
+except NameError:
+    print("WARN: __file__ not found, trying local")
+    dir_name = os.path.abspath('')
+lib_path = os.path.realpath(f"{Path(dir_name).parent}/src")
+# Add to path
+if lib_path not in sys.path:
+    print(f"Adding library path: {lib_path} to PYTHONPATH")
+    sys.path.append(lib_path)
+else:
+    print(f"Library path {lib_path} already in PYTHONPATH")
 
 
 # -- Options for HTML output -------------------------------------------------

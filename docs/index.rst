@@ -5,6 +5,7 @@ Welcome to FeatMF's documentation!
     :maxdepth: 1
     :caption: Table of contents
     
+    api
     developer
 
 
