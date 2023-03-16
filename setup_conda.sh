@@ -1,6 +1,6 @@
 # Install conda environment for development of FeatMF
 
-_CONDA_ENV_NAME="featmf-work"
+_CONDA_ENV_NAME="${1:-featmf-work}"
 
 # Ensure conda is installed
 if ! [ -x "$(command -v conda)" ]; then
@@ -26,7 +26,11 @@ read -p "Continue? [Ctrl-C to exit, enter to continue] "
 # Install requirements
 echo "---- Installing documentation and packaging tools ----"
 conda install -y -c conda-forge sphinx sphinx-rtd-theme sphinx-copybutton
-conda install -y -c conda-forge hatch setuptools
+pip install sphinx-reload
+conda install -y -c conda-forge setuptools
 pip install --upgrade build
-conda install -y -c conda-forge twine
-conda install -y conda-build
+conda install -y -c conda-forge hatch hatchling twine
+conda install -y conda-build anaconda-client
+
+# Installation completed
+echo "Environment $CONDA_DEFAULT_ENV is ready with all packages installed"

@@ -1,19 +1,23 @@
-{% set name = "FeatMF" %}
-{% set version = "0.1.0" %}
-
 package:
-  name: "{{ name|lower }}"
-  version: "{{ version }}"
+  name: featmf
+  version: 0.1.0
+
+source:
+  path: .
 
 requirements:
-  host:
-    - pip
+  build:
+    - python
+    - setuptools
+    - hatchling
+  run:
+    - python
 
 build:
   number: 0
-  script: "python -m pip install . --no-deps --ignore-installed -vv "
+  script: "python -m pip install . --no-deps --ignore-installed -vv"
 
 about:
-  home: https://featmf.readthedocs.io/en/latest/
+  home: https://github.com/TheProjectsGuy/FeatMF
   license: LGPLv3
   summary: A Feature Matching Framework
