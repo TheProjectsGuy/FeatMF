@@ -33,7 +33,7 @@ class HelloTeller:
     """
         A class that greets people.
     """
-    def __init__(self, name: Person=Person(), count: int=2) -> None:
+    def __init__(self, name: Person=Person(), count: int=1) -> None:
         """
             Initialize the greeter.
             
@@ -41,7 +41,10 @@ class HelloTeller:
             :type name:     Person
             :param count:   The number of times to greet the person.
         """
-        self.name = name
+        if type(name) == str:
+            name = Person(name)
+        assert type(name) == Person, "Use Person type"
+        self.name: Person = name
         self.count = count
     
     def greet(self) -> None:
@@ -49,7 +52,7 @@ class HelloTeller:
             Say hello to the person. Very similar to :py:func:`say_hello`.
         """
         for _ in range(self.count):
-            print(f"Hello, {self.name}!")
+            print(f"Hello, {self.name.get_name()}!")
     
     def get_person(self) -> Person:
         """
