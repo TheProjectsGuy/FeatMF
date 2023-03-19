@@ -9,7 +9,7 @@ My personal docs for things to do for this project
 Packaging
 -----------
 
-Run all packaging and development commands from the repository's root folder.
+Run all packaging and development commands from the repository's root folder. Repository follows `Semantic Versioning 2.0.0 <https://semver.org/>`_.
 
 PyPI
 ^^^^^
@@ -67,7 +67,7 @@ Build and install the package (locally) using
     # Build (default output in: ~/anaconda3/conda-bld)
     conda build .
     # See the path (verify the file)
-    conda build . --output
+    conda build --output .
     # Install
     conda install --use-local featmf
     # Clear builds (if you want to rebuild later)
