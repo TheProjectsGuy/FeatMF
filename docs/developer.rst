@@ -120,10 +120,12 @@ References
     - `Quickstart <https://www.sphinx-doc.org/en/master/usage/quickstart.html>`_
         - `Primer <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`_
     - `Sphinx Design <https://sphinx-design.readthedocs.io/en/latest/dropdowns.html>`_
+    - `Directives <https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html>`_ for markups
     - Code Documentation
         - `Autodoc code Documentation <https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html>`_: Main extension
         - `Domains <https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html>`_ for referencing
             - `Info fields <https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#info-field-lists>`_ for declaring the type of function parameters and variables
+        - `Describing code in Sphinx <https://www.sphinx-doc.org/en/master/tutorial/describing-code.html>`_ tutorial
 - Packaging
     - PyPI
         - `Getting Started <https://packaging.python.org/en/latest/tutorials/packaging-projects/>`_
