@@ -64,10 +64,12 @@ Build and install the package (locally) using
 
 .. code-block:: bash
 
+    # Set channels (arguments to the build call)
+    chlist="-c conda-forge -c pytorch -c nvidia ..."
     # Build (default output in: ~/anaconda3/conda-bld)
-    conda build .
+    conda build . $chlist
     # See the path (verify the file)
-    conda build --output .
+    conda build --output . $chlist
     # Install
     conda install --use-local featmf
     # Clear builds (if you want to rebuild later)
@@ -117,9 +119,11 @@ References
 - Sphinx
     - `Quickstart <https://www.sphinx-doc.org/en/master/usage/quickstart.html>`_
         - `Primer <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`_
+    - `Sphinx Design <https://sphinx-design.readthedocs.io/en/latest/dropdowns.html>`_
     - Code Documentation
         - `Autodoc code Documentation <https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html>`_: Main extension
         - `Domains <https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html>`_ for referencing
+            - `Info fields <https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#info-field-lists>`_ for declaring the type of function parameters and variables
 - Packaging
     - PyPI
         - `Getting Started <https://packaging.python.org/en/latest/tutorials/packaging-projects/>`_

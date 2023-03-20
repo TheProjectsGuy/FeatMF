@@ -31,6 +31,15 @@ conda install -y -c conda-forge setuptools
 pip install --upgrade build
 conda install -y -c conda-forge hatch hatchling twine
 conda install -y conda-build anaconda-client
+conda install -y -c conda-forge sphinx-design
+echo "---- Installing core package dependencies ----"
+conda install -y -c nvidia cuda-toolkit
+conda install -y pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+conda install -y -c conda-forge opencv
+conda install -y -c conda-forge joblib
+conda install -y -c conda-forge matplotlib
+conda install -y -c conda-forge jupyter
+conda install -y -c conda-forge pillow
 
 # Installation completed
 echo "Environment $CONDA_DEFAULT_ENV is ready with all packages installed"
