@@ -5,3 +5,4 @@ sphinx_design==0.3.0
 numpy==1.23.5
 torch==2.0.0
 pillow==7.2.0
+opencv-python==4.5.2
