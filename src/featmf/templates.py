@@ -12,7 +12,7 @@ from PIL import Image
 # import torch
 from dataclasses import dataclass
 from typing import Union, Any
-import PIL
+
 
 # %%
 # ----------- Types -----------
