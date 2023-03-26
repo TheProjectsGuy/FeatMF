@@ -1,13 +1,16 @@
+Utilities
+===========
+
 Templates
-==========
+------------
 
 .. automodule:: featmf.templates
     :members:
     :special-members: __init__
 
 
-Utilities
-===========
+Other utilities
+-----------------
 
 .. automodule:: featmf.utilities
     :members:

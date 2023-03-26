@@ -1,13 +1,13 @@
 FeatMF API
 ==========
 
-.. toctree:: 
-    :titlesonly:
+.. toctree::
     :maxdepth: 3
     :hidden:
-    :glob:
     
-    *
+    lfdd
+    utils
+    references
 
 The main API of FeatMF has the following modules
 
@@ -15,6 +15,3 @@ The main API of FeatMF has the following modules
 - :py:mod:`featmf.templates` - Abstract classes and templates for algorithms
 - :py:mod:`featmf.utilities` - Utilities
 
-.. automodule:: featmf
-    :members:
-    :special-members: __init__
