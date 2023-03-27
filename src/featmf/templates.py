@@ -9,7 +9,7 @@ import numpy as np
 import torch
 import cv2 as cv
 from PIL import Image
-# import torch
+import copy
 from dataclasses import dataclass
 from typing import Union, Any
 
@@ -54,23 +54,37 @@ class KptDetDescAlgo:
             Keypoints detected by the algorithm. Depending upon the
             algorithm, its shape can be one of the following
             
-            - [N, 2] for 2D keypoints (x, y) without scale information
-            - [N, 3] for 2D keypoints (x, y, s) with scale information
+            | - ``[N, 2]`` for 2D keypoints ``(x, y)`` without size 
+                information.
+            | - ``[N, 3]`` for 2D keypoints ``(x, y, s)`` with size 
+                information (diameter of the circle centered at the 
+                keypoint).
+            | - ``[N, 4]`` for 2D keypoints ``(x, y, s, ang)`` with
+                size and angle information. The angles are in radians
+                and are measured clockwise from the +ve x-axis (which
+                is to the right of the image).
             
-            Where N is the number of keypoints detected.
+            Where ``N`` is the number of keypoints detected.
+            
+            .. note:: 
+                Using ``[N, 3]`` as ``(x, y, ang)`` is discouraged 
+                (set size as 1 and use ``[N, 4]`` instead).
+            
+            See the documentation of the particular algorithm for more 
+            details.
         """
         descriptors: KDD_T1
         """
             Descriptors for the keypoints detected by the algorithm.
-            It's shape must be [N, D] where N is the number of 
-            keypoints and D is the descriptor dimension.
+            It's shape must be ``[N, D]`` where ``N`` is the number of 
+            keypoints and ``D`` is the descriptor dimension.
         """
         scores: KDD_T1
         """
             Scores for the keypoints detected by the algorithm. It's
-            shape must be [N,] where N is the number of keypoints.
-            This could be None if the algorithm does not provide
-            scores.
+            shape must be ``[N,]`` where ``N`` is the number of 
+            keypoints. This could be None if the algorithm does not 
+            provide detection scores (confidence).
         """
         
         # Length of the results
@@ -187,13 +201,10 @@ class KptDetDescAlgo:
         
         # Sort scores
         def sort_scores(self, top_k: Union[int,None]=None, 
-                ascending: bool=True) -> None:
+                ascending: bool=True) -> 'KptDetDescAlgo.Result':
             """
                 Sort the result based on the detection scores. To
                 use this function, the scores should not be None.
-                
-                .. note::
-                    This function changes the data contained.
                 
                 :param top_k: If not None, only the top-k detections
                         are retained (others are discarded). Default 
@@ -207,6 +218,14 @@ class KptDetDescAlgo:
                 
                 :raises AssertionError: If scores are None.
                 :raises TypeError: If scores are not of correct type.
+                
+                :returns self:  The result object (scores are sorted).
+                
+                .. note::
+                    This function changes the data contained in the
+                    called object.
+                
+                :rtype: KptDetDescAlgo.Result
             """
             assert self.scores is not None, "Scores do not exist"
             if type(self.scores) == np.ndarray:
@@ -226,6 +245,16 @@ class KptDetDescAlgo:
                 self.scores = self.scores[::-1]
                 self.keypoints = self.keypoints[::-1]
                 self.descriptors = self.descriptors[::-1]
+            return self
+        
+        # Clone
+        def copy(self) -> 'KptDetDescAlgo.Result':
+            """
+                Returns a deepcopy of the self item.
+                
+                :rtype: KptDetDescAlgo.Result
+            """
+            return copy.deepcopy(self)
     
     # Abstract methods
     def repr(self) -> str:
@@ -273,16 +302,5 @@ class KptDetDescAlgo:
             -> Result:
         return self.detect_and_describe(img, *args, **kwds)
 
-# %%
-import numpy as np
-
-# %%
-k = np.random.rand(10, 3)
-d = np.random.rand(10, 128)
-s = np.random.rand(10)
-a = KptDetDescAlgo.Result(k, d, s)
-
-# %%
-b = a[1:5:2]
 
 # %%

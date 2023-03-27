@@ -2,7 +2,7 @@ FeatMF API
 ==========
 
 .. toctree::
-    :maxdepth: 3
+    :maxdepth: 2
     :hidden:
     
     lfdd
@@ -11,7 +11,8 @@ FeatMF API
 
 The main API of FeatMF has the following modules
 
-- :py:mod:`featmf` - The main module of FeatMF
+- ``featmf`` - The main module of FeatMF
+- :py:mod:`featmf.lfdd` - Local Feature Detection and Description algorithms
 - :py:mod:`featmf.templates` - Abstract classes and templates for algorithms
-- :py:mod:`featmf.utilities` - Utilities
+- :py:mod:`featmf.utilities` - Utilities (functions)
 

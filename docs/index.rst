@@ -3,11 +3,14 @@ Welcome to FeatMF's documentation!
 
 **Feature Matching Framework**: A python package for local features.
 
+.. warning::
+    This package is still in (pre-alpha) development. The API may change in the future. Currently, there is no backward guarantee and the project stands unreleased (no release path as of now).
+
 .. contents:: Table of contents
     :depth: 3
 
-API
-----
+Python API
+-----------
 
 The Python API documentation can be found `here <api>`_.
 
@@ -26,7 +29,14 @@ Indices and tables
     
     api/index
     developer
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Indices
+    :hidden:
+    
     modindex
+    genindex
 
 * :ref:`genindex`
 * :ref:`modindex`

@@ -23,23 +23,37 @@ echo "Python: $(which python)"
 echo "Pip: $(which pip)"
 read -p "Continue? [Ctrl-C to exit, enter to continue] "
 
+# Functions
+function conda_install() {
+    echo -ne "\e[0;36m"
+    echo "conda install -y --freeze-installed --no-update-deps $@"
+    echo -ne "\e[0m"
+    conda install -y --freeze-installed --no-update-deps $@
+}
+function pip_install() {
+    echo -ne "\e[0;36m"
+    echo "pip install --upgrade $@"
+    echo -ne "\e[0m"
+    pip install --upgrade $@
+}
+
 # Install requirements
 echo "---- Installing documentation and packaging tools ----"
-conda install -y -c conda-forge sphinx sphinx-rtd-theme sphinx-copybutton
-pip install sphinx-reload
-conda install -y -c conda-forge setuptools
-pip install --upgrade build
-conda install -y -c conda-forge hatch hatchling twine
-conda install -y conda-build anaconda-client
-conda install -y -c conda-forge sphinx-design
+conda_install -c conda-forge sphinx sphinx-rtd-theme sphinx-copybutton
+pip_install sphinx-reload
+conda_install -c conda-forge setuptools
+pip_install build
+conda_install -c conda-forge hatch hatchling twine
+conda_install conda-build anaconda-client
+conda_install -c conda-forge sphinx-design
 echo "---- Installing core package dependencies ----"
-conda install -y -c nvidia cuda-toolkit
-conda install -y pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
-conda install -y -c conda-forge opencv
-conda install -y -c conda-forge joblib
-conda install -y -c conda-forge matplotlib
-conda install -y -c conda-forge jupyter
-conda install -y -c conda-forge pillow
+conda_install -c nvidia cuda-toolkit
+conda_install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+conda_install -c conda-forge opencv
+conda_install -c conda-forge joblib
+conda_install -c conda-forge matplotlib
+conda_install -c conda-forge jupyter
+conda_install -c conda-forge pillow
 
 # Installation completed
 echo "Environment $CONDA_DEFAULT_ENV is ready with all packages installed"

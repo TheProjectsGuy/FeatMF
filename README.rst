@@ -1,7 +1,7 @@
 FeatMF - Feature Matching Framework
 =====================================
 
-| **WIP**: This is a work in progress
+| **WIP**: This is a work in progress. Pre-alpha, no release planned yet.
 
 A framework for wrapping around a large number of local feature matching algorithms and related works.
 

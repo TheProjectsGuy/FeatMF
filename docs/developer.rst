@@ -1,7 +1,7 @@
 Developer Documentation
 ========================
 
-My personal docs for things to do for this project
+My personal docs for things to do for this project. Currently **not** accepting contributions for this personal project.
 
 .. contents::
     :depth: 3
@@ -9,7 +9,22 @@ My personal docs for things to do for this project
 Packaging
 -----------
 
-Run all packaging and development commands from the repository's root folder. Repository follows `Semantic Versioning 2.0.0 <https://semver.org/>`_.
+Run all packaging and development commands from the repository's root folder.
+
+Versioning
+^^^^^^^^^^^
+
+This repository follows `Semantic Versioning 2.0.0 <https://semver.org/>`_. When creating new releases, ensure that the version number is updated in the following places
+
+- ``meta.yaml``: For conda builds
+- ``src/featmf/__about__.py``: For the python package
+- ``docs/conf.py``: For the documentation
+
+The package dependencies have to be updated in the following places
+
+- ``setup_conda.sh``: For developers using conda
+- ``meta.yaml``: For conda builds
+- ``docs/requirements.txt``: For building the docs (sphinx).
 
 PyPI
 ^^^^^

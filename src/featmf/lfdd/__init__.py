@@ -11,4 +11,6 @@
 
 
 # %%
+# Short names
+from featmf.lfdd.sift import SIFTWrapper as SIFT
 
