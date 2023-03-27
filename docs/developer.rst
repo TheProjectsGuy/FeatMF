@@ -17,7 +17,7 @@ Versioning
 This repository follows `Semantic Versioning 2.0.0 <https://semver.org/>`_. When creating new releases, ensure that the version number is updated in the following places
 
 - ``meta.yaml``: For conda builds
-- ``src/featmf/__about__.py``: For the python package
+- ``src/featmf/__about__.py``: For the python package. This also changes the ```hatch`` build version due to the ``[tool.hatch.version]`` entry in ``pyproject.toml``.
 - ``docs/conf.py``: For the documentation
 
 The package dependencies have to be updated in the following places
@@ -53,6 +53,8 @@ Upload the package to PyPI using
 
     # Upload to PyPI
     python -m twine upload --verbose ./dist/*
+    # Upload using hatch (provide API credentials manually)
+    hatch publish
 
 Conda
 ^^^^^^^
@@ -75,16 +77,16 @@ You can manage the *developer* install (add to path and test the package) using
     # Remove this (after testing is over)
     conda develop -u ./src
 
-Build and install the package (locally) using
+Get the channel list from ``setup_conda.sh`` (that contains all the steps for setup). Build and install the package (locally) using
 
 .. code-block:: bash
 
     # Set channels (arguments to the build call)
     chlist="-c conda-forge -c pytorch -c nvidia ..."
     # Build (default output in: ~/anaconda3/conda-bld)
-    conda build . $chlist
+    conda build . `echo $chlist`
     # See the path (verify the file)
-    conda build --output . $chlist
+    conda build --output .
     # Install
     conda install --use-local featmf
     # Clear builds (if you want to rebuild later)

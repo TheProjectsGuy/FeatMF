@@ -44,8 +44,10 @@ pip_install sphinx-reload
 conda_install -c conda-forge setuptools
 pip_install build
 conda_install -c conda-forge hatch hatchling twine
+conda_install -c conda-forge keyrings.alt
 conda_install conda-build anaconda-client
 conda_install -c conda-forge sphinx-design
+
 echo "---- Installing core package dependencies ----"
 conda_install -c nvidia cuda-toolkit
 conda_install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia

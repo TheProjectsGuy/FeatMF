@@ -9,7 +9,7 @@
 project = 'FeatMF'
 copyright = '2023, Avneesh Mishra'
 author = 'Avneesh Mishra'
-release = '0.1.0'
+release = '0.1.1'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

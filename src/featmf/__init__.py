@@ -3,19 +3,13 @@
 """
 
 # %%
-# Build these things first
+# --- Build these things first (in the order of dependency) ---
 from featmf.__about__ import __version__
+# Templates
 import featmf.templates
-import featmf.utilities
-
-
-# %%
-# Global imports
 from featmf.templates import KptDetDescAlgo
+# Utilities
+import featmf.utilities
+# Local Feature Detection and Description (LFDD) algorithms
+import featmf.lfdd as lfdd
 
-
-# %%
-__all__ = [
-    "__version__",
-    "KptDetDescAlgo"
-]
