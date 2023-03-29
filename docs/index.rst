@@ -4,6 +4,7 @@ Welcome to FeatMF's documentation!
 **Feature Matching Framework**: A python package for local features.
 
 .. warning::
+    This work is for my personal use.
     This package is still in (pre-alpha) development. The API may change in the future. Currently, there is no backward guarantee and the project stands unreleased (no release path as of now).
 
 .. contents:: Table of contents
