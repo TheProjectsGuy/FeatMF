@@ -38,6 +38,8 @@ function pip_install() {
 }
 
 # Install requirements
+start_time=$(date)
+echo "---- Start time: $start_time ----"
 echo "---- Installing documentation and packaging tools ----"
 conda_install -c conda-forge sphinx sphinx-rtd-theme sphinx-copybutton
 pip_install sphinx-reload
@@ -58,4 +60,8 @@ conda_install -c conda-forge jupyter
 conda_install -c conda-forge pillow
 
 # Installation completed
+end_time=$(date)
+echo "---- End time: $end_time ----"
+dur=$(( $(date -d "$end_time" +%s) - $(date -d "$start_time" +%s) ))
+echo "--- Setup took (HH:MM:SS): `date -d@$dur -u +%H:%M:%S` ---"
 echo "Environment $CONDA_DEFAULT_ENV is ready with all packages installed"

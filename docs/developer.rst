@@ -6,6 +6,20 @@ My personal docs for things to do for this project. Currently **not** accepting 
 .. contents::
     :depth: 3
 
+
+Testing
+---------
+
+The package has unittests that can be run using
+
+.. code-block:: bash
+
+    # Run all tests
+    python -m unittest test -v
+    # Run a specific test
+    python -m unittest test.lfdd_algos -v
+
+
 Packaging
 -----------
 
@@ -153,6 +167,8 @@ References
         - `Building a package from scratch <https://docs.conda.io/projects/conda-build/en/latest/user-guide/tutorials/build-pkgs.html>`_
         - `Anaconda.org User Guide <https://docs.anaconda.com/anacondaorg/user-guide/getting-started/>`_: Getting started
             - `Working with packages <https://docs.anaconda.com/anacondaorg/user-guide/tasks/work-with-packages/>`_
+- Testing
+    - Docs on `unittest <https://docs.python.org/3/library/unittest.html>`_ and `doctest <https://docs.python.org/3/library/doctest.html>`_
 - Blog
     - `An idiot's guide to Python documentation with Sphinx and ReadTheDocs <https://samnicholls.net/2016/06/15/how-to-sphinx-readthedocs/>`_
 
