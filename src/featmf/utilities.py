@@ -1,4 +1,24 @@
 # Utilities for FeatMF
+"""
+    The ``utilities`` module contains utility functions for the
+    ``featmf`` module. They are divided into the following sections.
+    
+    Converter functions
+    -------------------
+    
+    -   :py:func:`featmf.utilities.kpts_cv2np`: Convert a list of
+        OpenCV keypoints into numpy array(s).
+    
+    Drawing functions
+    -----------------
+    
+    -   :py:func:`featmf.utilities.draw_keypoints`: Draw keypoints on
+        an image.
+    -   :py:func:`featmf.utilities.stack_images`: Stack two images
+        side-by-side with offset and relative positioning.
+    
+    All functions are documented below.
+"""
 
 # %%
 import numpy as np
@@ -69,6 +89,7 @@ def kpts_cv2np(kpts_cv: List[cv.KeyPoint], parse_size=False,
 
 # %%
 # --------------------- Drawing functions ---------------------
+# Draw keypoints on an image
 T2 = Union[np.ndarray, Tuple[int, int, int], None]
 T3 = Tuple[int, int]
 def draw_keypoints(img: np.ndarray, pts: np.ndarray, 
@@ -157,4 +178,85 @@ def draw_keypoints(img: np.ndarray, pts: np.ndarray,
             pe = pts_end[i]
             cv.line(rimg, (pt[0], pt[1]), (pe[0], pe[1]), c, t, lt)
     return rimg
+
+
+# Stack images
+def stack_images(img1: np.ndarray, img2: np.ndarray, hw_offset=(0, 1),
+            xy_pos=(0, 0), ret_alpha: bool=True) -> np.ndarray:
+    """ 
+        Stacks two images beside each other. There is an option to
+        add an offset between the images and to move the second image
+        to a different position (than adjacent). The size of the two
+        images can be different. The passed images are not modified.
+        
+        The input images can be in range ``[0, 1]`` (``float`` or 
+        ``np.float32``) or ``[0, 255]`` (uint8). The output image is
+        in the same range (and of the same type) as the input images.
+        
+        If a greyscale image is provided, it's converted to RGB (same
+        value for all channels).
+        
+        :param img1:    First image. Shape must be ``[H1, W1, 3]``.
+        :type img1:     np.ndarray
+        :param img2:    Second image. Shape must be ``[H2, W2, 3]``.
+        :type img2:     np.ndarray
+        :param hw_offset:   
+                The ``(hf, wf)`` offset of the top-left corner of the
+                frame of second image from the top-left corner of the 
+                first image. ``hf`` is the vertical offset (in 
+                fraction of the height of the first image) and ``wf`` 
+                is the horizontal offset (in fraction of the width of 
+                the first image).
+        :type hw_offset:    Tuple[float, float]
+        :param xy_pos:  The ``(x, y)`` position of the top-left corner
+                        of the second image in the frame of the second
+                        image. ``x`` is the horizontal offset (in
+                        pixels) and ``y`` is the vertical offset (in
+                        pixels).
+        :type xy_pos:   Tuple[int, int]
+        :param ret_alpha:   If True, the returned image has an alpha
+                            channel. If False, the returned image is
+                            RGB.
+        :type ret_alpha:    bool
+        
+        .. tip::
+            1.  The second image can placed in pure pixel locations 
+                relative to the top left corner of the first image by
+                setting ``hw_offset=(0, 0)`` and ``xy_pos=(x, y)``.
+            2.  The second image can be placed below the first one by
+                setting ``hw_offset=(1, 0)`` and ``xy_pos=(0, 0)``.
+        
+        :return:    The stacked image.
+    """
+    # Check input images
+    assert type(img1) == np.ndarray, "img1 must be a numpy array"
+    assert type(img2) == np.ndarray, "img2 must be a numpy array"
+    assert len(img1.shape) == 3, "img1 must be a 3D array"
+    assert len(img2.shape) == 3, "img2 must be a 3D array"
+    h1, w1, c1 = img1.shape
+    if c1 == 1:
+        img1 = np.repeat(img1, 3, axis=2)
+    h2, w2, c2 = img2.shape
+    if c2 == 1:
+        img2 = np.repeat(img2, 3, axis=2)
+    assert img1.dtype == img2.dtype, "Images must have same dtype"
+    # Both images are now RGB (H, W, 3 shape)
+    hf, wf = hw_offset
+    x, y = xy_pos
+    ret_img = np.zeros((int(max(h1, h1 * hf + y + h2)), 
+            int(max(w1, w1 * wf + x + w2)), 4), dtype=img1.dtype)
+    # Insert images
+    ret_img[:h1, :w1, :3] = img1
+    ret_img[int(h1 * hf + y):int(h1 * hf + y + h2),
+            int(w1 * wf + x):int(w1 * wf + x + w2), :3] = img2
+    # Add alpha channel
+    occ_val = 255 if img1.dtype == np.uint8 else 1.0
+    ret_img[:h1, :w1, 3] = occ_val
+    ret_img[int(h1 * hf + y):int(h1 * hf + y + h2),
+            int(w1 * wf + x):int(w1 * wf + x + w2), 3] = occ_val
+    # Return image
+    if ret_alpha:
+        return ret_img
+    else:
+        return ret_img[..., :3]
 
