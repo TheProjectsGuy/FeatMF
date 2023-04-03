@@ -58,6 +58,7 @@ conda_install -c conda-forge joblib
 conda_install -c conda-forge matplotlib
 conda_install -c conda-forge jupyter
 conda_install -c conda-forge pillow
+conda_install -c conda-forge cupy
 
 # Installation completed
 end_time=$(date)
