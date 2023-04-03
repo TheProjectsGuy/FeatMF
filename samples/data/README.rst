@@ -19,3 +19,6 @@ Images
     * - Butterfly
       - .. image:: ./butterfly.jpg
       - `opencv/samples/data/butterfly.jpg <https://github.com/opencv/opencv/blob/4.x/samples/data/butterfly.jpg>`_
+    * - Simple shapes
+      - .. image:: ./simple.jpg
+      - `answers.opencv.org theodore <https://answers.opencv.org/question/72388/where-to-get-simplejpg/>`_
