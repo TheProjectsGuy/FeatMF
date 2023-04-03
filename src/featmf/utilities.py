@@ -226,7 +226,11 @@ def stack_images(img1: np.ndarray, img2: np.ndarray, hw_offset=(0, 1),
             2.  The second image can be placed below the first one by
                 setting ``hw_offset=(1, 0)`` and ``xy_pos=(0, 0)``.
         
-        :return:    The stacked image.
+        :return:    The stacked image. Shape is ``[H, W, 4]`` if
+                    ``ret_alpha=True`` and ``[H, W, 3]`` if
+                    ``ret_alpha=False``. The ``dtype`` is the same as
+                    the input images.
+        :rtype:     np.ndarray
     """
     # Check input images
     assert type(img1) == np.ndarray, "img1 must be a numpy array"
