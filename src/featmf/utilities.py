@@ -194,7 +194,8 @@ def stack_images(img1: np.ndarray, img2: np.ndarray, hw_offset=(0, 1),
         in the same range (and of the same type) as the input images.
         
         If a greyscale image is provided, it's converted to RGB (same
-        value for all channels).
+        value for all channels). In this case, an image of shape 
+        ``[H, W]`` is converted to ``[H, W, 1]``.
         
         :param img1:    First image. Shape must be ``[H1, W1, 3]``.
         :type img1:     np.ndarray
@@ -235,6 +236,10 @@ def stack_images(img1: np.ndarray, img2: np.ndarray, hw_offset=(0, 1),
     # Check input images
     assert type(img1) == np.ndarray, "img1 must be a numpy array"
     assert type(img2) == np.ndarray, "img2 must be a numpy array"
+    if len(img1.shape) == 2:
+        img1 = img1[..., None]
+    if len(img2.shape) == 2:
+        img2 = img2[..., None]
     assert len(img1.shape) == 3, "img1 must be a 3D array"
     assert len(img2.shape) == 3, "img2 must be a 3D array"
     h1, w1, c1 = img1.shape

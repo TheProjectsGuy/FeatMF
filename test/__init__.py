@@ -2,3 +2,5 @@
 
 # Local Feature Detection and Description tests
 from .lfdd_algos import *
+# Drawing functions
+from .drawing_funcs import *
