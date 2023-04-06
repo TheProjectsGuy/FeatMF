@@ -1,7 +1,6 @@
 # Templates for FeatMF Framework
 """
-    Template classes for local image feature detection and description 
-    algorithms.
+    Template classes for the FeatMF framework.
 """
 
 # %%
@@ -11,7 +10,7 @@ import cv2 as cv
 from PIL import Image
 import copy
 from dataclasses import dataclass
-from typing import Union, Any
+from typing import Union, Any, Tuple
 
 
 # %%
@@ -19,6 +18,11 @@ from typing import Union, Any
 # For KptDetDescAlgo
 KDD_T1 = Union[np.ndarray, torch.Tensor, None]
 KDD_T2 = Union[np.ndarray, torch.Tensor, Image.Image]
+# For ImgKptMatchAlgo
+IKM_T1 = Union[np.ndarray, torch.Tensor, 
+        Tuple[np.ndarray, np.ndarray], 
+        Tuple[torch.Tensor, torch.Tensor]]
+IKM_T2 = Union[np.ndarray, torch.Tensor, None]
 
 
 # %%
@@ -31,11 +35,11 @@ class KptDetDescAlgo:
         Rules for the child classes:
         
         -   The child classes must implement the function 
-            :meth:`detect_and_describe` that returns a 
-            :class:`KptDetDescAlgo.Result` object. They must sanitize
-            the input types to suit the particular algorithm.
-        -   ``__call__`` function calls :meth:`detect_and_describe`.
-            The child classes need not implement this.
+            :py:meth:`detect_and_describe` that returns a 
+            :py:class:`KptDetDescAlgo.Result` object. They must 
+            sanitize the input types to suit the particular algorithm.
+        -   ``__call__`` function calls :py:meth:`detect_and_describe`
+            and the child classes need not implement this.
     """
     @dataclass
     class Result:
@@ -55,12 +59,12 @@ class KptDetDescAlgo:
             Keypoints detected by the algorithm. Depending upon the
             algorithm, its shape can be one of the following
             
-            | - ``[N, 2]`` for 2D keypoints ``(x, y)`` without size 
+            -   ``[N, 2]`` for 2D keypoints ``(x, y)`` without size 
                 information.
-            | - ``[N, 3]`` for 2D keypoints ``(x, y, s)`` with size 
+            -   ``[N, 3]`` for 2D keypoints ``(x, y, s)`` with size 
                 information (diameter of the circle centered at the 
                 keypoint).
-            | - ``[N, 4]`` for 2D keypoints ``(x, y, s, ang)`` with
+            -   ``[N, 4]`` for 2D keypoints ``(x, y, s, ang)`` with
                 size and angle information. The angles are in radians
                 and are measured clockwise from the +ve x-axis (which
                 is to the right of the image).
@@ -306,7 +310,73 @@ class KptDetDescAlgo:
 
 # %%
 # Image Matching Algorithm
-class ImgMatchAlgo:
-    # TODO: Create class with two subclasses (DescriptorMatcher and
-    #  DirectMatcher)
+class ImgKptMatchAlgo:
+    """
+        A template for image-pair keypoint matching algorithms.
+        
+        Rules for the child classes:
+        
+        | - The child class 
+    """
+    @dataclass
+    class Result:
+        """
+            Result for an image-pair keypoint matching algorithm.
+            Includes keypoints (for both images), descriptors (for
+            both images), corresponding keypoint indices (keypoint
+            correspondences), and matching scores (confidence).
+            
+            .. note::
+            
+                Check the documentation of the algorithm for types,
+                shapes, and descriptions of these items. A generic
+                description is given in this class.
+        """
+        i1: IKM_T1
+        """
+            Keypoint indices (or actual locations) for image1. The
+            shape can be one of the following
+            
+            -   If the :py:attr:`res` attribute is set it is ``[N,]``
+                which represents a 1D array of keypoint indices for 
+                image 1.
+            -   If the :py:attr:`res` attribute is not set, then it
+                contains the keypoints. The shape is then one of the
+                valid :py:attr:`keypoints \
+                    <featmf.templates.KptDetDescAlgo.Result.keypoints>`
+                shapes. In this case, the indices will correspond for
+                matches.
+        """
+        i2: IKM_T1
+        """
+            Keypoint indices (or actual locations) for image1. The
+            shape will be the same as of :py:attr:`i1`.
+        """
+        scores: IKM_T2
+        """
+            Matching scores (confidence) for the keypoint matches. Not
+            all algorithms may set this (it's ``None`` if not set). If 
+            it is set, the shape is ``[N,]`` where ``N`` is the number
+            of matches.
+        """
+        res: Union[None,
+                Tuple[KptDetDescAlgo.Result, KptDetDescAlgo.Result]]
+        """
+            Results for the keypoint detection and description 
+            algorithm for the two images. It is a tuple of two
+            :py:class:`KptDetDescAlgo.Result \
+                <featmf.templates.KptDetDescAlgo.Result>` objects,
+            one for each image (image1, image2). Not all algorithms
+            set this (it's ``None`` if not set).
+        """
+        
+        # Check presence of results
+        def has_kpt_res(self) -> bool:
+            """
+                Returns True if the keypoint results are present.
+                
+                :rtype: bool
+            """
+            return self.res is not None
+        
     pass
