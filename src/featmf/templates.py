@@ -22,6 +22,7 @@ KDD_T2 = Union[np.ndarray, torch.Tensor, Image.Image]
 
 
 # %%
+# Image Keypoint Detection and Description Algorithm
 class KptDetDescAlgo:
     """
         A template for image local keypoint detection and description 
@@ -29,11 +30,11 @@ class KptDetDescAlgo:
         
         Rules for the child classes:
         
-        | - The child classes must implement the function 
+        -   The child classes must implement the function 
             :meth:`detect_and_describe` that returns a 
             :class:`KptDetDescAlgo.Result` object. They must sanitize
             the input types to suit the particular algorithm.
-        | - ``__call__`` function calls :meth:`detect_and_describe`.
+        -   ``__call__`` function calls :meth:`detect_and_describe`.
             The child classes need not implement this.
     """
     @dataclass
@@ -304,3 +305,8 @@ class KptDetDescAlgo:
 
 
 # %%
+# Image Matching Algorithm
+class ImgMatchAlgo:
+    # TODO: Create class with two subclasses (DescriptorMatcher and
+    #  DirectMatcher)
+    pass
