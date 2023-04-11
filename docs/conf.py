@@ -17,6 +17,7 @@ release = '0.1.1'
 extensions = [
     'sphinx_copybutton',
     'sphinx.ext.autodoc',
+    'sphinx.ext.viewcode',
     'sphinx_design',
 ]
 
