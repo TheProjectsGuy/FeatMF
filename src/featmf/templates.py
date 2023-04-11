@@ -16,13 +16,12 @@ from typing import Union, Any, Tuple
 # %%
 # ----------- Types -----------
 # For KptDetDescAlgo
-KDD_T1 = Union[np.ndarray, torch.Tensor, None]
-KDD_T2 = Union[np.ndarray, torch.Tensor, Image.Image]
+KDD_T1 = Union[np.ndarray, torch.Tensor, None]  # Kpts, Desc, Scores
+KDD_T2 = Union[np.ndarray, torch.Tensor, Image.Image]   # Images
 # For ImgKptMatchAlgo
-IKM_T1 = Union[np.ndarray, torch.Tensor, 
-        Tuple[np.ndarray, np.ndarray], 
-        Tuple[torch.Tensor, torch.Tensor]]
-IKM_T2 = Union[np.ndarray, torch.Tensor, None]
+IKM_T1 = Union[np.ndarray, torch.Tensor, None]  # Matching indices
+IKM_T2 = Union[np.ndarray, torch.Tensor, None]  # Scores
+IKM_T3 = Union[np.ndarray, torch.Tensor, Image.Image]   # Images
 
 
 # %%
@@ -125,7 +124,7 @@ class KptDetDescAlgo:
                 r += f"\nScores are present"
             return r
         
-        def repr(self):
+        def repr(self) -> str:
             """
                 Returns a string representation of the object
                 describing the keypoints, descriptors, and scores.
@@ -316,7 +315,12 @@ class ImgKptMatchAlgo:
         
         Rules for the child classes:
         
-        | - The child class 
+        -   The child class must implement the function 
+            :py:meth:`match_images` that returns a
+            :py:class:`ImgKptMatchAlgo.Result` object. They must
+            sanitize the input types to suit the algorithm.
+        -   ``__call__`` function calls :py:meth:`match_images` and
+            the child class need not implement this.
     """
     @dataclass
     class Result:
@@ -334,7 +338,7 @@ class ImgKptMatchAlgo:
         """
         i1: IKM_T1
         """
-            Keypoint indices (or actual locations) for image1. The
+            Keypoint indices (or actual locations) for image 1. The
             shape can be one of the following
             
             -   If the :py:attr:`res` attribute is set it is ``[N,]``
@@ -346,11 +350,14 @@ class ImgKptMatchAlgo:
                     <featmf.templates.KptDetDescAlgo.Result.keypoints>`
                 shapes. In this case, the indices will correspond for
                 matches.
+            
+            Basically, each row corresponds to a keypoint match.
         """
         i2: IKM_T1
         """
-            Keypoint indices (or actual locations) for image1. The
-            shape will be the same as of :py:attr:`i1`.
+            Keypoint indices (or actual locations) for image 2. The
+            shape will be the same as of :py:attr:`i1`. Each row
+            corresponds to a keypoint match in :py:attr:`i1`.
         """
         scores: IKM_T2
         """
@@ -368,7 +375,50 @@ class ImgKptMatchAlgo:
                 <featmf.templates.KptDetDescAlgo.Result>` objects,
             one for each image (image1, image2). Not all algorithms
             set this (it's ``None`` if not set).
+            
+            Classes that set this by using a 
+            :py:class:`KptDetDescAlgo \
+                <featmf.templates.KptDetDescAlgo>` may take the object
+            in the constructor.
         """
+        
+        # Length of the results
+        def __len__(self):
+            if self.i1 is None:
+                return 0
+            return len(self.i1)
+        
+        def len(self) -> int:
+            """
+                Returns the number of matches (0 if not set).
+            """
+            return len(self)
+        
+        # String representation
+        def __repr__(self) -> str:
+            r = f"ImgKptMatchAlgoResult: {len(self)} matches "
+            if self.res is None:
+                r += f"\n\tResults not set separately"
+                r += f"\n\tIndices 1 shape: {self.i1.shape}"
+                r += f"\n\tIndices 2 shape: {self.i2.shape}"
+            else:
+                r += f"\n\tResults set separately"
+                r += "--------- Image 1 results ---------"
+                r += self.res[0].repr()
+                r += "--------- Image 2 results ---------"
+                r += self.res[1].repr()
+            return r
+        
+        def repr(self) -> str:
+            """
+                Returns a string representation of the object
+                describing the keypoints, descriptors, and scores.
+                
+                .. tip::
+                    This function is also implemented in the 
+                    ``__repr__`` method for usual ``print`` calls.
+            """
+            return self.__repr__()
         
         # Check presence of results
         def has_kpt_res(self) -> bool:
@@ -379,4 +429,117 @@ class ImgKptMatchAlgo:
             """
             return self.res is not None
         
-    pass
+        # Clone
+        def copy(self) -> 'ImgKptMatchAlgo.Result':
+            """
+                Returns a deepcopy of the self item.
+                
+                :rtype: ImgKptMatchAlgo.Result
+            """
+            return copy.deepcopy(self)
+        
+        # Sort by scores
+        def sort_scores(self, top_k: Union[int, None] = None, 
+                ascending: bool=True) -> 'ImgKptMatchAlgo.Result':
+            """
+                Sorts the matching result by the matching score. To
+                use this function, the scores should not be None and
+                a high score should correspond to a good match.
+                
+                Note that this function changes only :py:attr:`i1`,
+                :py:attr:`i2`, and :py:attr:`scores` attributes. The
+                :py:attr:`res` attribute, isn't changed.
+                
+                :param top_k:   If not None, only the top-k matches
+                                are kept (others are discarded).
+                                Default is ``None``.
+                :type top_k:    Union[int, None]
+                :param ascending:   If True, the scores are sorted
+                                    in the ascending order. If False,
+                                    the scores are sorted in the
+                                    descending order. Default is
+                                    ``True``.
+                :type ascending:    bool
+                
+                :raises AssertionError: If the scores are None.
+                :raises TypeError: If scores are not of correct type.
+                
+                :returns self:  The sorted result.
+                :rtype: ImgKptMatchAlgo.Result
+                
+                .. note::
+                    This function changes the data contained the the
+                    called object. It does not return a new object.
+            """
+            assert self.scores is not None, "Scores do not exist"
+            if type(self.scores) == np.ndarray:
+                _o = np.argsort(self.scores)
+            elif type(self.scores) == torch.Tensor:
+                _o = torch.argsort(self.scores)
+            else:
+                raise TypeError(f"Scores type: {type(self.scores)}")
+            self.i1 = self.i1[_o]
+            self.i2 = self.i2[_o]
+            self.scores = self.scores[_o]
+            if top_k is not None:   # Keep only top-k (ascending)
+                self.i1 = self.i1[-top_k:]
+                self.i2 = self.i2[-top_k:]
+                self.scores = self.scores[-top_k:]
+            if not ascending:   # Reverse the order
+                self.i1 = self.i1[::-1]
+                self.i2 = self.i2[::-1]
+                self.scores = self.scores[::-1]
+            return self
+    
+    # Abstract methods
+    def repr(self) -> str:
+        """
+            Returns a string representation of the object.
+            
+            .. tip::
+                This function is also implemented in the ``__repr__``
+                method for usual ``print`` calls.
+        """
+        return self.__repr__()
+    
+    def __repr__(self) -> str:
+        return f"Wrapper class for {self.__class__.__name__}"
+    
+    def match_images(self, img1: IKM_T3, img2: IKM_T3, *args: Any, 
+                **kwargs: Any) -> Result:
+        """
+            Matches the keypoints in the two images. This must be
+            implemented by the child class.
+            
+            :param img1:    Image 1.
+            :type img1: Union[np.ndarray, torch.Tensor, Image.Image]
+            :param img2:    Image 2.
+            :type img2: Union[np.ndarray, torch.Tensor, Image.Image]
+            :param args: Additional arguments
+            :param kwargs: Additional keyword arguments
+            
+            .. note::
+                The child classes should enforce type constraints. 
+                This is because some algorithms may not work with
+                certain types, or might require preprocessing of the
+                image. See the documentation of the child classes for
+                more information.
+            
+            :raises TypeError: If ``img`` is of an invalid type (for
+                the particular algorithm).
+            :raises NotImplementedError: If the child class does not
+                implement this method.
+            
+            .. tip::
+                The ``__call__`` method calls this method directly. It
+                has the same inputs and outputs.
+            
+            :return: The result of the detection and description
+            :rtype: ImgKptMatchAlgo.Result
+        """
+        raise NotImplementedError("Function not implemented")
+    
+    def __call__(self, img1: IKM_T3, img2: IKM_T3, *args: Any, 
+                **kwargs: Any) -> Result:
+        return self.match_images(img1, img2, *args, **kwargs)
+

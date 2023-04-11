@@ -6,4 +6,9 @@
     Keypoint Correspondence or Matching
     ===================================
     
+    .. automodule:: featmf.ikcm.nearest_neighbor
 """
+
+# %%
+# Short names
+from featmf.ikcm.nearest_neighbor import NNMatcher as NN
