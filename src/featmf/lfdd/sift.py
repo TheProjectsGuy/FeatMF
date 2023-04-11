@@ -18,16 +18,16 @@
 # %%
 import cv2 as cv
 import numpy as np
-from featmf import KptDetDescAlgo
 from typing import Any
 # Local imports
+from featmf import KptDetDescAlgo
 from featmf.utilities import kpts_cv2np
 
 
 # %%
 EPS = 1e-7      # To prevent ZeroDivisionError
 # Types
-IMG_T1 = np.ndarray
+IMG_T1 = np.ndarray     # Image type
 
 
 # %%
@@ -87,7 +87,10 @@ class SIFTWrapper(KptDetDescAlgo):
                                 (not used)
             
             :raises ValueError: If the image shape is invalid.
+            :raises TypeError:  If the image type is invalid.
         """
+        if type(img) != np.ndarray:
+            raise TypeError("Invalid image type")
         if len(img.shape) == 2: # Add channel for grayscale
             img = img[..., None]
         H, W, C = img.shape
