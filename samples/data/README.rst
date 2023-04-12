@@ -34,3 +34,5 @@ Images
     * - Stacked Eiffel Tower
       - .. image:: ./eiffel_tower_stack.png
       - Eiffel tower (stacked) for unit testing
+
+Also see https://www.robots.ox.ac.uk/~vgg/research/affine/
