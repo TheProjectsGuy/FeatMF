@@ -109,6 +109,16 @@ class SIFTWrapper(KptDetDescAlgo):
                     parse_angle=True, angle_conv_rad=True, 
                     ret_response=True)
             descs = desc_cv
+            # Normalize descriptors
+            if self.norm_desc:
+                descs /= (EPS + \
+                        np.linalg.norm(descs, axis=1, keepdims=True))
+            elif self.root_sift:    # RootSIFT
+                # L1 normalize descriptors
+                descs /= (np.sum(descs, axis=1, keepdims=True) + EPS)
+                # Take square root
+                descs = np.sqrt(descs)
+                # The descriptors should already be L2-normalized!
         res = SIFTWrapper.Result(kpts, descs, scores)
         return res
 
