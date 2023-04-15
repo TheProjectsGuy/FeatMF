@@ -130,4 +130,5 @@ class NNMatcher(ImgKptMatchAlgo):
             res2 = res2.sort_scores(self.top_n, False)
         d1, d2 = res1.descriptors, res2.descriptors
         # TODO: Implement this using faiss or something
-        pass
+        raise NotImplementedError("Not implemented yet")
+
