@@ -63,22 +63,20 @@ class NNMatcher(ImgKptMatchAlgo):
                             algorithm object to use for extracting 
                             keypoints and descriptors.
             :type algo:     KptDetDescAlgo
-            :param mutual:  If True, the condition of mutual matching
-                            is enforced. That is, if a keypoint in the
-                            first image matches with a keypoint in the
-                            second image, then the keypoint in the
-                            second image should also match with the
-                            same keypoint in the first image.
-            :type mutual:   bool
-            :param top_n:   If not None, only the ``top_n`` best
-                            keypoints in each image are considered for
-                            matching and storing in results.
-            :type top_n:    int or None
+            # :param mutual:  If True, the condition of mutual matching
+            #                 is enforced. That is, if a keypoint in the
+            #                 first image matches with a keypoint in the
+            #                 second image, then the keypoint in the
+            #                 second image should also match with the
+            #                 same keypoint in the first image.
+            # :type mutual:   bool
+            # :param top_n:   If not None, only the ``top_n`` best
+            #                 keypoints in each image are considered for
+            #                 matching and storing in results.
+            # :type top_n:    int or None
         """
         super().__init__()
         self.lfdd_algo = algo
-        self.mutual = mutual
-        self.top_n = top_n
     
     # Representation
     def __repr__(self) -> str:

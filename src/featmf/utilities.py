@@ -26,8 +26,7 @@ import cv2 as cv
 from typing import List, Union, Tuple
 
 
-# %%
-# ----------- Converter functions -----------
+# %% ----------- Converter functions -----------
 # Keypoints: OpenCV to numpy
 T1 = Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]
 def kpts_cv2np(kpts_cv: List[cv.KeyPoint], parse_size=False, 
@@ -87,8 +86,7 @@ def kpts_cv2np(kpts_cv: List[cv.KeyPoint], parse_size=False,
         return kpts
 
 
-# %%
-# --------------------- Drawing functions ---------------------
+# %% --------------------- Drawing functions ---------------------
 # Draw keypoints on an image
 T2 = Union[np.ndarray, Tuple[int, int, int], None]
 T3 = Tuple[int, int]
