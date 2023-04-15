@@ -61,6 +61,7 @@ conda_install -c conda-forge pillow
 conda_install -c conda-forge cupy
 conda_install -c conda-forge pynvml
 conda_install -c pytorch faiss-gpu
+conda_install -c conda-forge einops
 
 # Installation completed
 end_time=$(date)
