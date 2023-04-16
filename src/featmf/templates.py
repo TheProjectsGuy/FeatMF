@@ -53,7 +53,7 @@ class KptDetDescAlgo:
                 shapes, and descriptions of these items. A generic 
                 description is given in this class.
         """
-        keypoints: KDD_T1
+        keypoints: KDD_T1 = None
         """
             Keypoints detected by the algorithm. Depending upon the
             algorithm, its shape can be one of the following
@@ -77,13 +77,13 @@ class KptDetDescAlgo:
             See the documentation of the particular algorithm for more 
             details.
         """
-        descriptors: KDD_T1
+        descriptors: KDD_T1 = None
         """
             Descriptors for the keypoints detected by the algorithm.
             It's shape must be ``[N, D]`` where ``N`` is the number of 
             keypoints and ``D`` is the descriptor dimension.
         """
-        scores: KDD_T1
+        scores: KDD_T1 = None
         """
             Scores for the keypoints detected by the algorithm. It's
             shape must be ``[N,]`` where ``N`` is the number of 
@@ -336,7 +336,7 @@ class ImgKptMatchAlgo:
                 shapes, and descriptions of these items. A generic
                 description is given in this class.
         """
-        i1: IKM_T1
+        i1: IKM_T1 = None
         """
             Keypoint indices (or actual locations) for image 1. The
             shape can be one of the following
@@ -353,13 +353,13 @@ class ImgKptMatchAlgo:
             
             Basically, each row corresponds to a keypoint match.
         """
-        i2: IKM_T1
+        i2: IKM_T1 = None
         """
             Keypoint indices (or actual locations) for image 2. The
             shape will be the same as of :py:attr:`i1`. Each row
             corresponds to a keypoint match in :py:attr:`i1`.
         """
-        scores: IKM_T2
+        scores: IKM_T2 = None
         """
             Matching scores (confidence) for the keypoint matches. Not
             all algorithms may set this (it's ``None`` if not set). If 
@@ -367,7 +367,8 @@ class ImgKptMatchAlgo:
             of matches.
         """
         res: Union[None,
-                Tuple[KptDetDescAlgo.Result, KptDetDescAlgo.Result]]
+                Tuple[KptDetDescAlgo.Result, KptDetDescAlgo.Result]] \
+                    = None
         """
             Results for the keypoint detection and description 
             algorithm for the two images. It is a tuple of two
@@ -396,16 +397,20 @@ class ImgKptMatchAlgo:
         
         # String representation
         def __repr__(self) -> str:
-            r = f"ImgKptMatchAlgoResult: {len(self)} matches "
-            if self.res is None:
-                r += f"\n\tResults not set separately"
-                r += f"\n\tIndices 1 shape: {self.i1.shape}"
-                r += f"\n\tIndices 2 shape: {self.i2.shape}"
+            r = f"ImgKptMatchAlgoResult: {len(self)} matches"
+            if self.scores is None:
+                r += f"\n\t- Scores not set"
             else:
-                r += f"\n\tResults set separately"
-                r += "--------- Image 1 results ---------"
+                r += f"\n\t- Scores are set"
+            if self.res is None:
+                r += f"\n\t- Results not set separately"
+                r += f"\n\t- Indices 1 shape: {self.i1.shape}"
+                r += f"\n\t- Indices 2 shape: {self.i2.shape}"
+            else:
+                r += f"\n\t- Results set separately"
+                r += f"\n--------- Image 1 results ---------\n"
                 r += self.res[0].repr()
-                r += "--------- Image 2 results ---------"
+                r += f"\n--------- Image 2 results ---------\n"
                 r += self.res[1].repr()
             return r
         
