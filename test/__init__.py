@@ -4,3 +4,5 @@
 from .lfdd_algos import *
 # Drawing functions
 from .drawing_funcs import *
+# Local Feature Detection and Description tests
+from .ikcm_algos import *
