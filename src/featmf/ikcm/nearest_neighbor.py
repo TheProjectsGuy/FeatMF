@@ -80,13 +80,14 @@ class NNMatcher(ImgKptMatchAlgo):
                     and the intersection of the two is used.
                 -   ``"union"``: Merge the matches from image 1 to 2
                     and 2 to 1 (union of the two).
+            
             :type match_algo:   str
             :param top_k:   The number of top keypoints to use before
                             matching. If None, all keypoints are used.
             :type top_k:    int or None
             :param top_r:   The number of top correspondences to get
                             for each keypoint in the images. Basically
-                            retrievals per keypoint when matching/
+                            retrievals per keypoint when matching or
                             searching.
             :type top_r:    int
             :param top_n:   The number of top matches to return. If
@@ -144,6 +145,11 @@ class NNMatcher(ImgKptMatchAlgo):
             :raises TypeError:  If the input image is not of the 
                                 correct type, or if the images are
                                 not of the same type.
+            
+            :return:    The result of the match. The ``i1``, ``i2``, 
+                        and ``scores`` attributes are numpy arrays.
+            :rtype:     :py:class:`Result \
+                            <featmf.templates.ImgKptMatchAlgo.Result>`
         """
         if type(img1) != type(img2):
             raise TypeError("Both images must be of the same type")
