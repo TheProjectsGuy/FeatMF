@@ -18,7 +18,7 @@ The Python API documentation can be found `here <api>`_.
 Acknowledgements
 -----------------
 
-This project is developed by TheProjectsGuy (Avneesh Mishra). Some help (in form of code and documentation) is provided by GitHub Copilot and Bing AI (Microsoft).
+This project is developed by TheProjectsGuy (Avneesh Mishra).
 
 Indices and tables
 --------------------

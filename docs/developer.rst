@@ -144,6 +144,15 @@ Build the docs using
     # Live reload
     sphinx-reload docs
 
+You can edit the theme in ``docs/source/conf.py``
+
+.. code-block:: python
+
+    # The theme to use for HTML and HTML Help pages.  See the documentation for
+    # a list of builtin themes.
+    #
+    html_theme = 'sphinx_rtd_theme'
+
 References
 ----------
 
