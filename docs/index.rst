@@ -28,8 +28,14 @@ Indices and tables
     :caption: Contents
     :hidden:
     
-    api/index
     developer
+
+.. toctree::
+    :maxdepth: 4
+    :caption: API
+    :hidden:
+    
+    api/index
 
 .. toctree::
     :maxdepth: 1

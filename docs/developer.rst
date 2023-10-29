@@ -142,7 +142,7 @@ Build the docs using
     cd docs
     make html
     # Live reload
-    sphinx-reload docs
+    sphinx-reload .
 
 You can edit the theme in ``docs/source/conf.py``
 
