@@ -3,31 +3,6 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-# -- Project information -----------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-
-project = 'FeatMF'
-copyright = '2023, Avneesh Mishra'
-author = 'Avneesh Mishra'
-release = '0.1.1'
-
-# -- General configuration ---------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
-
-extensions = [
-    'sphinx_copybutton',
-    'sphinx.ext.autodoc',
-    'sphinx.ext.viewcode',
-    'sphinx_design',
-]
-
-templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-
-# -- Autodoc configuration ---------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html
-
-# autoclass_content = 'both'
 
 # Add src to sys.path
 import os
@@ -48,6 +23,42 @@ if lib_path not in sys.path:
 else:
     print(f"Library path {lib_path} already in PYTHONPATH")
 
+import featmf.__about__ as featmf_info
+
+# -- Project information -----------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+
+project = 'FeatMF'
+copyright = '2023, Avneesh Mishra'
+author = 'Avneesh Mishra'
+release = featmf_info.__version__
+
+# -- General configuration ---------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+
+extensions = [
+    'sphinx_copybutton',
+    'sphinx.ext.autodoc',
+    'sphinx.ext.viewcode',
+    'sphinx_design',
+]
+
+templates_path = ['_templates']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+
+# -- Autodoc configuration ---------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html
+
+# autoclass_content = 'both'
+from unittest.mock import MagicMock
+
+class Mock(MagicMock):
+    @classmethod
+    def __getattr__(cls, name):
+        return MagicMock()
+
+MOCK_MODULES = ["faiss"]
+sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
