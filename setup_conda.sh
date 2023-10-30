@@ -225,6 +225,7 @@ if [ $dev_tools == "true" ]; then
     conda_install -c conda-forge keyrings.alt
     conda_install conda-build anaconda-client
     conda_install -c conda-forge sphinx-design
+    conda_install -c conda-forge jupyter
 elif [ $dev_tools == "false" ]; then
     echo_info "Skipping documentation and packaging tools"
 fi
@@ -234,7 +235,6 @@ conda_raw_install pytorch torchvision torchaudio pytorch-cuda=11.8 \
 conda_raw_install -c conda-forge opencv
 conda_install -c conda-forge joblib
 conda_install -c conda-forge matplotlib
-conda_install -c conda-forge jupyter
 conda_install -c conda-forge pillow
 conda_install -c conda-forge cupy
 conda_install -c conda-forge pynvml
