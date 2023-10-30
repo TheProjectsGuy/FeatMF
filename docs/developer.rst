@@ -31,8 +31,7 @@ Versioning
 This repository follows `Semantic Versioning 2.0.0 <https://semver.org/>`_. When creating new releases, ensure that the version number is updated in the following places
 
 - ``meta.yaml``: For conda builds
-- ``src/featmf/__about__.py``: For the python package. This also changes the ```hatch`` build version due to the ``[tool.hatch.version]`` entry in ``pyproject.toml``.
-- ``docs/conf.py``: For the documentation
+- ``src/featmf/__about__.py``: For the python package. This also changes the ```hatch`` build version due to the ``[tool.hatch.version]`` entry in ``pyproject.toml``, and the entry in ``docs/conf.py``.
 
 The package dependencies have to be updated in the following places
 
