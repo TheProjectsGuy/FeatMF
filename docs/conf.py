@@ -57,9 +57,8 @@ class Mock(MagicMock):
     def __getattr__(cls, name):
         return MagicMock()
 
-# All modules that have been 'import'ed but don't want to install
-#  for docs build (keep docs/requirements.txt light)
-MOCK_MODULES = ["numpy", "torch", "PIL", "cv2", "faiss", "einops"]
+# Modules that can't be 'pip installed' in docs build but are used
+MOCK_MODULES = ["faiss"]
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 # -- Options for HTML output -------------------------------------------------
