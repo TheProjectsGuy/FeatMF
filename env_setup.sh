@@ -10,10 +10,12 @@ exec_name="conda"           # Executable
 dry_run="false"     # 'true' or 'false'
 ask_prompts="true"  # 'true' or 'false'
 dev_tools="false"   # 'true' or 'false'
+warn_exit="true"    # 'true' or 'false'
 
 # Output formatting
 debug_msg_fmt="\e[2;90m"
 info_msg_fmt="\e[1;37m"
+warn_msg_fmt="\e[1;35m"
 fatal_msg_fmt="\e[2;31m"
 command_msg_fmt="\e[0;36m"
 # Wrapper printing functions
@@ -24,6 +26,11 @@ echo_debug () {
 }
 echo_info () {
     echo -ne $info_msg_fmt
+    echo $@
+    echo -ne "\e[0m"
+}
+echo_warn () {
+    echo -ne $warn_msg_fmt
     echo $@
     echo -ne "\e[0m"
 }
@@ -48,6 +55,18 @@ function run_command() {
 }
 function conda_install() {
     run_command $exec_name install -y --freeze-installed --no-update-deps $@
+    ec=$?
+    if [[ $ec -gt 0 ]]; then
+        echo_warn "Could not install '$@', maybe try though conda_raw_install"
+        if [[ $warn_exit == "true" ]]; then
+            exit $ec
+        else
+            echo_debug "Exit on warning not set, continuing..."
+        fi
+    fi
+}
+function conda_raw_install() {
+    run_command $exec_name install -y $@
 }
 function pip_install() {
     run_command pip install --upgrade $@
@@ -82,12 +101,16 @@ All optional arguments:
                             'conda'.
     -d | --dev              If passed, the documentation and packaging 
                             tools are also installed (they aren't, by 
-                            default).
+                            default). These are only for developers.
         --dry-run           If passed, the commands are printed instead of
                             running them.
     -e | --env-name NAME    Name of the conda/mamba environment. This can
                             also be passed as the 1st positional argument.
     -h | --help             Show this message.
+        --no-exit-on-warn   By default, a warning causes the script to
+                            exit (with a suggested modification). If this
+                            option is passed, the script doesn't exit (it
+                            continues). This could cause unintended errors.
     -n | --no-prompt        By default, a prompt is shown (asking to press
                             Enter to continue). If this is passed, the
                             prompt is not shown.
@@ -96,6 +119,7 @@ Exit codes
     0       Script executed successfully
     1       Argument error (some wrong argument was passed)
     127     Could not find conda or mamba (executable)
+    -       Some warning (if exit on warning)
 EOF
 }
 
@@ -135,6 +159,11 @@ function parse_options() {
             "--help" | "-h")
                 usage
                 exit 0
+                ;;
+            # No exit on warning
+            "--no-exit-on-warn")
+                echo_debug "No exit on warning set"
+                warn_exit="false"
                 ;;
             # No prompt
             "--no-prompt" | "-n")
@@ -187,15 +216,31 @@ start_time=$(date)
 start_time_secs=$SECONDS
 echo_debug "---- Start time: $start_time ----"
 echo_info "------ Installing core packages ------"
-conda_install pytorch torchvision torchaudio pytorch-cuda=11.8 \
+# Core packages using conda_install and conda_raw_install
+echo_info "Installing PyTorch"
+# Find if NVIDIA GPU
+#   From: https://stackoverflow.com/a/66613797/5836037
+gpu=$(lspci | grep -i '.* vga .* nvidia .*')
+if [[ "${gpu^^}" == *' NVIDIA '* ]]; then
+    echo_debug "Found NVIDIA GPU"
+    conda_raw_install pytorch torchvision torchaudio pytorch-cuda=11.8 \
         -c pytorch -c nvidia
-pip_install opencv-contrib-python
+else
+    echo_debug "Couldn't find NVIDIA GPU, installing PyTorch CPU"
+    conda_raw_install pytorch torchvision torchaudio cpuonly -c pytorch
+fi
+conda_raw_install -c conda-forge opencv
 conda_install -c conda-forge joblib
 conda_install -c conda-forge matplotlib
-pip_install jupyter
 conda_install -c conda-forge pillow
+conda_install -c conda-forge cupy
+conda_install -c conda-forge pynvml
+conda_install -c pytorch faiss-gpu
+conda_install -c conda-forge einops
+# Developer tools
 if [ $dev_tools == "true" ]; then 
     echo_info "------ Installing documentation and packaging tools ------"
+    # Sphinx docs
     conda_install -c conda-forge sphinx sphinx-rtd-theme sphinx-copybutton
     pip_install sphinx-reload
     conda_install -c conda-forge setuptools
@@ -204,6 +249,7 @@ if [ $dev_tools == "true" ]; then
     conda_install -c conda-forge keyrings.alt
     conda_install conda-build anaconda-client
     conda_install -c conda-forge sphinx-design
+    conda_install -c conda-forge jupyter
 elif [ $dev_tools == "false" ]; then
     echo_info "Skipping documentation and packaging tools"
 fi

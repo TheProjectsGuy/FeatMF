@@ -9,3 +9,6 @@ __pycache__/
 
 # Ignore PyPI builds
 dist/
+
+# Ignore backups
+*.backup
